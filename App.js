@@ -1,30 +1,57 @@
 import { StatusBar } from "expo-status-bar";
 import { useState } from "react";
-import { StyleSheet, Text, View, TextInput, Button } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TextInput,
+  Button,
+  FlatList,
+} from "react-native";
+
+import Item from "./component/items";
 
 export default function App() {
   const [item, setItem] = useState("");
+  const [task, setTask] = useState([]);
+
   function handleAddItem() {
-    console.log(item);
+    const newItem = item.trim();
+
+    if (newItem === "") return;
+
+    setTask((currentTasks) => [
+      ...currentTasks,
+      { id: Date.now().toString(), title: newItem },
+    ]);
+
     setItem("");
   }
-  function handleInputText(text) {
-    setItem(text);
-  }
+
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />
+
       <View style={styles.inputContainer}>
         <TextInput
           value={item}
-          onChangeText={handleInputText}
+          onChangeText={setItem}
           style={styles.input}
           placeholder="PROJEKT PMA"
         />
+
         <Button title="ADD" onPress={handleAddItem} />
-      </View>
-      <View style={styles.udalosti}>
+
         <Text>UDALOST</Text>
+      </View>
+
+      <View style={styles.udalosti}>
+        <FlatList
+          data={task}
+          keyExtractor={(taskItem) => taskItem.id}
+          renderItem={({ item }) => <Item title={item.title} />}
+          ListEmptyComponent={<Text>Zatiaľ žiadne udalosti.</Text>}
+        />
       </View>
     </View>
   );
@@ -33,10 +60,12 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    margin: 2,
+    borderWidth: 3,
   },
   inputContainer: {
     flex: 1,
-    backgroundColor: "white",
+    backgroundColor: "lightgreen",
     justifyContent: "space-around",
     alignItems: "center",
     flexDirection: "row",
@@ -49,7 +78,7 @@ const styles = StyleSheet.create({
   },
   udalosti: {
     flex: 2,
-    backgroundColor: "white",
+    backgroundColor: "lightblue",
     padding: 10,
   },
 });
