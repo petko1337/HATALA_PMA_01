@@ -9,7 +9,7 @@ import {
   FlatList,
 } from "react-native";
 
-import Item from "./component/items";
+import Item from "./src/Componenty/Items";
 
 export default function App() {
   const [item, setItem] = useState("");
